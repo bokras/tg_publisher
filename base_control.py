@@ -13,7 +13,6 @@ class Control:
             result = []
             # Подключение к базе данных SQLite
             conn = sqlite3.connect(self.base_path)
-            gg
 
             cursor = conn.cursor()
 
@@ -306,6 +305,96 @@ class Control:
         finally:
             # Закрытие соединения с базой данных
             conn.close()
+
+    def create_account(self, name, api_hash, api_id, phone_number):
+        try:
+            conn = sqlite3.connect(self.base_path)
+            c = conn.cursor()
+
+            # Создаем таблицу, если она еще не существует
+            c.execute('''CREATE TABLE IF NOT EXISTS tgaccaunts
+                         (name TEXT, api_hash TEXT, api_id INTEGER, phone_number TEXT)''')
+
+            # Вставляем новую запись
+            c.execute("INSERT INTO tgaccaunts (name, api_hash, api_id, phone_number) VALUES (?, ?, ?, ?)",
+                      (name, api_hash, api_id, phone_number))
+
+            conn.commit()
+            conn.close()
+            return True
+        except sqlite3.Error as e:
+            print(f"Ошибка при создании записи: {e}")
+            return False
+
+    def get_all_accounts(self):
+        try:
+            conn = sqlite3.connect(self.base_path)
+            c = conn.cursor()
+
+            c.execute("SELECT * FROM tgaccaunts")
+            rows = c.fetchall()
+
+            accounts = []
+            for row in rows:
+                account = {
+                    "id": row[0],
+                    "name": row[1],
+                    "api_hash": row[2],
+                    "api_id": row[3],
+                    "phone_number": row[4]
+                }
+                accounts.append(account)
+
+            conn.close()
+            return accounts
+        except sqlite3.Error as e:
+            print(f"Ошибка при получении записей: {e}")
+            return []
+
+    def get_account_by_id(self, id):
+        try:
+            conn = sqlite3.connect(self.base_path)
+            c = conn.cursor()
+
+            c.execute("SELECT * FROM tgaccaunts WHERE id = ?", (id,))
+            row = c.fetchone()
+
+            if row:
+                account = {
+                    "id": row[0],
+                    "name": row[1],
+                    "api_hash": row[2],
+                    "api_id": row[3],
+                    "phone_number": row[4]
+                }
+                conn.close()
+                return account
+            else:
+                conn.close()
+                return None
+        except sqlite3.Error as e:
+            print(f"Ошибка при поиске аккаунта: {e}")
+
+    def delete_account_by_id(self, id):
+        try:
+            conn = sqlite3.connect(self.base_path)
+            c = conn.cursor()
+
+            # Проверяем, существует ли аккаунт с указанным api_id
+            c.execute("SELECT COUNT(*) FROM tgaccaunts WHERE id = ?", (id,))
+            count = c.fetchone()[0]
+
+            if count > 0:
+                # Удаляем аккаунт
+                c.execute("DELETE FROM tgaccaunts WHERE id = ?", (id,))
+                conn.commit()
+                conn.close()
+                return True
+            else:
+                conn.close()
+                return False
+        except sqlite3.Error as e:
+            print(f"Ошибка при удалении аккаунта: {e}")
 
 
 if __name__ == "__main__":
