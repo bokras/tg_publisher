@@ -399,5 +399,5 @@ class Control:
 
 if __name__ == "__main__":
     api = Control()
-    data = api.set_setting("gpt_prompt","привет")
+    data = api.get_all_accounts()
     print(data)

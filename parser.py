@@ -89,8 +89,9 @@ class TgParser:
         return joined
 
 
-    async def add_new_account(self):
+    async def add_new_account(self, api_id:str, api_hash:str, phone_number):
         pass
+
         
 
 
@@ -98,6 +99,8 @@ class TgParser:
 async def test():
     api = TgParser()
     urls = ["@markettwits"]
+    txt = api.get_redy_messages_on_chat(chat_id="@markettwits", word="amazon", min_day=7)
+    print(txt)
 
 
 
