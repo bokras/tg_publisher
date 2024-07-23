@@ -30,6 +30,26 @@ class Control:
         except:
             return None
 
+
+    def check_admin_exists(self, id):
+        try:
+            # Подключение к базе данных SQLite
+            conn = sqlite3.connect(self.base_path)
+            cursor = conn.cursor()
+
+            # Проверяем, есть ли запись с таким именем в таблице
+            cursor.execute("SELECT * FROM admins WHERE id = ?", (id,))
+            result = cursor.fetchone()
+
+            return result is not None
+
+        except sqlite3.Error as e:
+            print(f"Ошибка при работе с базой данных: {e}")
+            return False
+        finally:
+            # Закрытие соединения с базой данных
+            conn.close()
+
     def check_joined_channel_exists(self, name):
         try:
             # Подключение к базе данных SQLite

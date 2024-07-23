@@ -1,6 +1,7 @@
 #сообщения
 welcome_msg = "Здравствуйте {}!\nВыберите пункт меню:"
 parser_channels_manage_msg = ""
+you_not_admin = "Вы не являетесь администратором"
 
 
 #кнопки
@@ -12,6 +13,7 @@ cancel_btn = "Отмена"
 back_btn = "Назад"
 parser_channels_manage_btn = "Управление каналами для сбора данных"
 parser_accounts_manage_btn = "Управление аккаунтми для сбора данных"
+admins_manage_btn = "Управление администраторами"
 change_gpt_prompt_btn = "Изменить запрос GPT"
 save_btn = "Сохранить"
 add_account_btn = "Добавить аккаунт"
